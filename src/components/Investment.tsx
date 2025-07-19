@@ -28,6 +28,14 @@ import {
   Area,
   AreaChart,
 } from 'recharts'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from './ui/table'
 
 const formSchema = z.object({
   amount: z.coerce
@@ -268,7 +276,7 @@ export function Investment() {
                 <ResponsiveContainer width="100%" height={300}>
                   <AreaChart
                     data={chartData}
-                    margin={{ top: 10, right: 0, left: 0, bottom: 0 }}
+                    margin={{ top: 10, right: 0, left: 20, bottom: 0 }}
                   >
                     <CartesianGrid strokeDasharray="4 4" />
                     <XAxis
@@ -313,6 +321,39 @@ export function Investment() {
                     )}
                   </AreaChart>
                 </ResponsiveContainer>
+                <Table
+                  className={cn(
+                    'mx-auto rounded-xl border',
+                    form.getValues('monthly') ? 'max-w-xs' : 'max-w-52'
+                  )}
+                >
+                  <TableHeader className="bg-neutral-100">
+                    <TableRow>
+                      <TableHead>Year</TableHead>
+                      {form.getValues('monthly') !== undefined && (
+                        <TableHead className="text-center">Deposits</TableHead>
+                      )}
+                      <TableHead className="text-right">Value</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {chartData.map((data, index) => (
+                      <TableRow key={index}>
+                        <TableCell className="font-medium">
+                          {data.year}
+                        </TableCell>
+                        {form.getValues('monthly') !== undefined && (
+                          <TableCell className="text-center">
+                            {formatNumberToReadableString(data.deposits)}
+                          </TableCell>
+                        )}
+                        <TableCell align="right">
+                          {formatNumberToReadableString(data.value)}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
               </>
             )}
           </CardFooter>
